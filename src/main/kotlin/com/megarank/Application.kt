@@ -1,4 +1,4 @@
-package com.megarank.demo
+package com.megarank
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
