@@ -9,6 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 class Position(
         @Id val id: String,
         val ranking: String,
-        val position: Int,
+        var position: Int,
         val user: String
 )
