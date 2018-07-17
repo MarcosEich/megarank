@@ -32,24 +32,25 @@ class PositionService {
         val position1 = positionRepository.getByUser(match.player1)
         val position2 = positionRepository.getByUser(match.player2)
 
-        val highRank = higher(position1, position2)
-        val lowRank = lower(position1, position2)
+        val ranking = listOf(position1, position2)
+                .sortedBy(Position::position)
 
-        if(winner(match) == lowRank.user) {
-            updateRanking(lowRank, highRank)
+        val bestInRank = 0
+        val worstInRank = 1
+        if(winner(match) == ranking[worstInRank].user) {
+            updateRanking(ranking[worstInRank], ranking[bestInRank])
         }
     }
 
-    private fun updateRanking(lowRank: Position, highRank: Position) {
-        val lowerRank = lowRank.position
-        lowRank.position = highRank.position
-        highRank.position++
+    private fun updateRanking(worstInRank: Position, bestInRank: Position) {
+        val lowerRank = worstInRank.position
+        worstInRank.position = bestInRank.position
+        bestInRank.position++
 
         positionRepository.findAll()
-                .forEach { update(it,  lowerRank, highRank.position) }
+                .forEach { update(it,  lowerRank, bestInRank.position) }
 
-        positionRepository.save(highRank)
-        positionRepository.save(lowRank)
+        positionRepository.saveAll(listOf(bestInRank, worstInRank))
     }
 
     private fun update(position: Position, lowerRank: Int, higherRank: Int) {
@@ -57,19 +58,5 @@ class PositionService {
             position.position++
             positionRepository.save(position)
         }
-    }
-
-    private fun higher(pos1: Position, pos2: Position): Position {
-        if(pos1.position < pos2.position) {
-            return pos1
-        }
-        return  pos2
-    }
-
-    private fun lower(pos1: Position, pos2: Position): Position {
-        if(pos1.position > pos2.position) {
-            return pos1
-        }
-        return  pos2
     }
 }
