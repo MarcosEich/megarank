@@ -3,3 +3,7 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017
       database: megarank
+
+auth0:
+  audience: megarank.live
+  issuer: https://softillusion.auth0.com/
